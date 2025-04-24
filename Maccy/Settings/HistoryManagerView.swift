@@ -3,11 +3,69 @@ import Defaults
 import AppKit
 
 /**
+ * 历史记录管理窗口控制器
+ * 用于显示可调整大小的历史记录管理窗口
+ */
+class HistoryManagerWindowController: NSWindowController {
+    private var historyRef: History
+    
+    /**
+     * 创建一个新的历史记录管理窗口控制器
+     * @param history 历史记录对象
+     */
+    init(history: History) {
+        self.historyRef = history
+        
+        let styleMask: NSWindow.StyleMask = [.titled, .closable, .miniaturizable, .resizable]
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 600, height: 400),
+            styleMask: styleMask,
+            backing: .buffered,
+            defer: false
+        )
+        window.title = NSLocalizedString("HistoryManager", tableName: "GeneralSettings", comment: "")
+        window.center()
+        window.minSize = NSSize(width: 500, height: 300) // 设置最小窗口大小
+        
+        super.init(window: window)
+        
+        // 在初始化完成后设置内容视图
+        setupContentView()
+    }
+    
+    /**
+     * 设置窗口内容视图
+     */
+    private func setupContentView() {
+        // 创建内容视图，传入窗口控制器引用
+        let contentView = HistoryManagerView(history: historyRef, windowController: self)
+            .ignoresSafeArea() // 忽略安全区域以使用整个窗口
+        
+        // 设置窗口的内容视图
+        window?.contentView = NSHostingView(rootView: contentView)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    /**
+     * 显示窗口并使其成为按键窗口
+     */
+    func show() {
+        window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+}
+
+/**
  * 历史记录管理视图
  * 用于在偏好设置中显示和管理剪贴板历史记录
  */
 struct HistoryManagerView: View {
     var history: History
+    var windowController: HistoryManagerWindowController?
+    
     @Environment(\.dismiss) private var dismiss
     
     @State private var searchQuery = ""
@@ -15,6 +73,10 @@ struct HistoryManagerView: View {
     @State private var showConfirmDeleteAlert = false
     @State private var showConfirmClearAlert = false
     
+    /**
+     * 过滤后的历史记录项目
+     * 根据搜索查询过滤历史记录
+     */
     private var filteredItems: [HistoryItemDecorator] {
         if searchQuery.isEmpty {
             return history.all
@@ -35,7 +97,11 @@ struct HistoryManagerView: View {
                 Spacer()
                 
                 Button(action: {
-                    dismiss()
+                    if let windowController = windowController {
+                        windowController.close()
+                    } else {
+                        dismiss()
+                    }
                 }) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
@@ -74,7 +140,11 @@ struct HistoryManagerView: View {
             // 底部操作按钮
             HStack {
                 Button(action: {
-                    dismiss()
+                    if let windowController = windowController {
+                        windowController.close()
+                    } else {
+                        dismiss()
+                    }
                 }) {
                     Text(NSLocalizedString("Close", tableName: "GeneralSettings", comment: ""))
                 }
@@ -117,6 +187,15 @@ struct HistoryManagerView: View {
         } message: {
             Text(NSLocalizedString("ClearHistoryMessage", tableName: "GeneralSettings", comment: ""))
         }
+    }
+    
+    /**
+     * 在新窗口中显示历史记录管理器
+     * @param history 历史记录对象
+     */
+    static func showInWindow(history: History) {
+        let windowController = HistoryManagerWindowController(history: history)
+        windowController.show()
     }
 }
 

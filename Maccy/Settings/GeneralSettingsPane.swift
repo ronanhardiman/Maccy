@@ -19,8 +19,6 @@ struct GeneralSettingsPane: View {
 
   @State private var updater = SoftwareUpdater()
   
-  @State private var showHistoryManager = false
-
   var body: some View {
     Settings.Container(contentWidth: 450) {
       Settings.Section(title: "", bottomDivider: true) {
@@ -95,12 +93,9 @@ struct GeneralSettingsPane: View {
         label: { Text("ManageHistory", tableName: "GeneralSettings") }
       ) {
         Button(action: {
-          showHistoryManager.toggle()
+          HistoryManagerView.showInWindow(history: History.shared)
         }) {
           Text("OpenHistoryManager", tableName: "GeneralSettings")
-        }
-        .sheet(isPresented: $showHistoryManager) {
-          HistoryManagerView(history: History.shared)
         }
       }
 
