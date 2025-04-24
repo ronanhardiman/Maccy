@@ -25,8 +25,8 @@ struct HistoryListView: View {
   var body: some View {
     if pinTo == .top {
       LazyVStack(spacing: 0) {
-        ForEach(pinnedItems) { item in
-          HistoryItemView(item: item)
+        ForEach(Array(pinnedItems.enumerated()), id: \.element.id) { index, item in
+          HistoryItemViewWithIndex(item: item, index: index)
         }
 
         if showPinsSeparator {
@@ -48,8 +48,8 @@ struct HistoryListView: View {
     ScrollView {
       ScrollViewReader { proxy in
         LazyVStack(spacing: 0) {
-          ForEach(unpinnedItems) { item in
-            HistoryItemView(item: item)
+          ForEach(Array(unpinnedItems.enumerated()), id: \.element.id) { index, item in
+            HistoryItemViewWithIndex(item: item, index: index)
           }
         }
         .task(id: appState.scrollTarget) {
@@ -113,6 +113,35 @@ struct HistoryListView: View {
             }
         }
       }
+    }
+  }
+}
+
+// 创建一个新的包装组件，用于传递索引
+struct HistoryItemViewWithIndex: View {
+  @Bindable var item: HistoryItemDecorator
+  var index: Int
+  
+  @Environment(AppState.self) private var appState
+  
+  var body: some View {
+    ListItemView(
+      id: item.id,
+      appIcon: item.applicationImage,
+      image: item.thumbnailImage,
+      accessoryImage: item.thumbnailImage != nil ? nil : ColorImage.from(item.title),
+      attributedTitle: item.attributedTitle,
+      shortcuts: item.shortcuts,
+      isSelected: item.isSelected,
+      index: index
+    ) {
+      Text(verbatim: item.title)
+    }
+    .onTapGesture {
+      appState.history.select(item)
+    }
+    .popover(isPresented: $item.showPreview, arrowEdge: .trailing) {
+      PreviewItemView(item: item)
     }
   }
 }

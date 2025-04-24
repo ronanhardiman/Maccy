@@ -3,6 +3,8 @@ import Defaults
 import KeyboardShortcuts
 import LaunchAtLogin
 import Settings
+// 可以尝试添加下面这行代码以明确导入
+// import Maccy
 
 struct GeneralSettingsPane: View {
   private let notificationsURL = URL(
@@ -16,6 +18,8 @@ struct GeneralSettingsPane: View {
   @State private var pasteWithoutFormatting = HistoryItemAction.pasteWithoutFormatting.modifierFlags.description
 
   @State private var updater = SoftwareUpdater()
+  
+  @State private var showHistoryManager = false
 
   var body: some View {
     Settings.Container(contentWidth: 450) {
@@ -84,6 +88,20 @@ struct GeneralSettingsPane: View {
         .fixedSize(horizontal: false, vertical: true)
         .foregroundStyle(.gray)
         .controlSize(.small)
+      }
+      
+      Settings.Section(
+        bottomDivider: true,
+        label: { Text("ManageHistory", tableName: "GeneralSettings") }
+      ) {
+        Button(action: {
+          showHistoryManager.toggle()
+        }) {
+          Text("OpenHistoryManager", tableName: "GeneralSettings")
+        }
+        .sheet(isPresented: $showHistoryManager) {
+          HistoryManagerView(history: History.shared)
+        }
       }
 
       Settings.Section(title: "") {

@@ -10,6 +10,7 @@ struct ListItemView<Title: View>: View {
   var shortcuts: [KeyShortcut]
   var isSelected: Bool
   var help: LocalizedStringKey?
+  var index: Int? = nil
   @ViewBuilder var title: () -> Title
 
   @Default(.showApplicationIcons) private var showIcons
@@ -18,6 +19,13 @@ struct ListItemView<Title: View>: View {
 
   var body: some View {
     HStack(spacing: 0) {
+      if let index = index {
+        Text("\(index)")
+          .frame(width: 20, alignment: .center)
+          .foregroundStyle(isSelected ? Color.white : .secondary)
+          .font(.system(size: 11))
+      }
+      
       if showIcons, let appIcon {
         VStack {
           Spacer(minLength: 0)
