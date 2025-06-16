@@ -18,3 +18,18 @@
 "Regex" = "正则表达式";
 "Mixed" = "混合";
 "NotificationsAndSounds" = "通知和声音 􀱁";
+
+"ManageHistory" = "管理历史记录：";
+"OpenHistoryManager" = "打开历史记录管理器";
+"SearchHistory" = "搜索历史记录...";
+"ClearHistory" = "清除历史记录";
+"DeleteItem" = "删除项目";
+"ClearHistoryConfirmation" = "清除历史记录";
+"ClearHistoryMessage" = "是否要清除所有历史记录项目或仅清除未固定的项目？";
+"ClearUnpinned" = "清除未固定项目";
+"ClearAll" = "清除所有项目";
+"Cancel" = "取消";
+"Copy" = "复制";
+"Unpin" = "取消固定";
+"Close" = "关闭";
+"HistoryManager" = "历史记录管理器";

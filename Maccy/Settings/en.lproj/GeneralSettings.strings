@@ -18,3 +18,18 @@
 "Regex" = "Regular expressions";
 "Mixed" = "Mixed";
 "NotificationsAndSounds" = "Notifications and sounds 􀱁";
+
+"ManageHistory" = "Manage History:";
+"OpenHistoryManager" = "Open History Manager";
+"SearchHistory" = "Search history...";
+"ClearHistory" = "Clear History";
+"DeleteItem" = "Delete Item";
+"ClearHistoryConfirmation" = "Clear History";
+"ClearHistoryMessage" = "Do you want to clear all history items or just unpinned ones?";
+"ClearUnpinned" = "Clear Unpinned Items";
+"ClearAll" = "Clear All Items";
+"Cancel" = "Cancel";
+"Copy" = "Copy";
+"Unpin" = "Unpin";
+"Close" = "Close";
+"HistoryManager" = "History Manager";
